@@ -5,13 +5,13 @@ Golang yaml config reader
 package main
 
 import (
-    "log"
+	"log"
 
-    "github.com/onrik/yaconf"
+	"github.com/onrik/yaconf"
 )
 
 type Config struct {
-    LogFile string `yaml:"log_file" yaconf:"required"`
+	LogFile string `yaml:"log_file" yaconf:"required"`
 }
 
 func main() {
@@ -22,6 +22,7 @@ func main() {
 		return
 	}
 
-    log.Printf("%+v\n", config)
+	log.Printf("%+v\n", config)
 }
+
 ```
