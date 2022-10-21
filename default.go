@@ -33,7 +33,7 @@ func setDefaultValue(v reflect.Value) error {
 		}
 		if strings.HasPrefix(tag, "default") {
 			parts := strings.SplitN(tag, "=", 2)
-			if len(parts) < 2 {
+			if len(parts) < 2 || parts[1] == "" {
 				continue
 			}
 			defaultValue := parts[1]
