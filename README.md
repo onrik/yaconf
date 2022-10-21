@@ -1,4 +1,10 @@
 # yaconf
+
+[![Tests](https://github.com/onrik/yaconf/workflows/Tests/badge.svg)](https://github.com/onrik/yaconf/actions)
+[![Coverage Status](https://coveralls.io/repos/github/onrik/yaconf/badge.svg?branch=main)](https://coveralls.io/github/onrik/yaconf?branch=main)
+[![Go Report Card](https://goreportcard.com/badge/github.com/onrik/yaconf)](https://goreportcard.com/report/github.com/onrik/yaconf)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/onrik/yaconf)](https://pkg.go.dev/github.com/onrik/yaconf)
+
 Golang yaml config reader
 
 ```golang
