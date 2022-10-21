@@ -32,6 +32,10 @@ func validate(config interface{}, prefix string) []string {
 	errors := []string{}
 	for i := 0; i < t.NumField(); i++ {
 		f := t.Field(i)
+		if !f.IsExported() {
+			continue
+		}
+
 		name := f.Tag.Get("yaml")
 		if name == "" {
 			name = f.Name
@@ -48,10 +52,12 @@ func validate(config interface{}, prefix string) []string {
 		}
 
 		if f.Type.Kind() == reflect.Ptr {
-			if f.Type.Elem().Kind() == reflect.Struct {
-				if v.Field(i).IsNil() {
-					v.Field(i).Set(reflect.New(f.Type.Elem()))
-				}
+			if f.Type.Elem().Kind() != reflect.Struct {
+				continue
+			}
+			if v.Field(i).IsNil() {
+				errors = append(errors, validate(reflect.New(f.Type.Elem()), addPrefix(prefix, name))...)
+			} else {
 				errors = append(errors, validate(v.Field(i).Elem().Interface(), addPrefix(prefix, name))...)
 			}
 		}
@@ -68,6 +74,11 @@ func Read(filename string, config interface{}) error {
 	}
 
 	err = yaml.Unmarshal(data, config)
+	if err != nil {
+		return err
+	}
+
+	err = fillDefaultValues(config)
 	if err != nil {
 		return err
 	}

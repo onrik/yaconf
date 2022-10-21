@@ -6,12 +6,19 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/onrik/yaconf"
 )
 
 type Config struct {
-	LogFile string `yaml:"log_file" yaconf:"required"`
+	LogFile  string `yaml:"log_file" yaconf:"required"`
+	LogLevel string `yaml:"log_level" yaconf:"default=info"`
+}
+
+func (c *Config) Validate() error {
+	_, err := os.Stat(c.LogFile)
+	return err
 }
 
 func main() {
