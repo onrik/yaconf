@@ -41,7 +41,6 @@ func setDefaultValue(v reflect.Value) error {
 				continue
 			}
 			defaultValue := parts[1]
-			fmt.Println("Set", f.Name, defaultValue)
 
 			if f.Type.Kind() == reflect.String {
 				v.Field(i).Set(reflect.ValueOf(defaultValue))
