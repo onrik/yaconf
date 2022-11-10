@@ -9,6 +9,10 @@ import (
 )
 
 func setDefaultValue(v reflect.Value) error {
+	if v.Type().Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+
 	for i := 0; i < v.Type().NumField(); i++ {
 		f := v.Type().Field(i)
 		if !f.IsExported() {
