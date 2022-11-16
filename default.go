@@ -65,7 +65,7 @@ func setDefaultValue(v reflect.Value) error {
 			if isInt(v.Field(i)) {
 				value, err := strconv.ParseInt(defaultValue, 10, 64)
 				if err != nil {
-					return fmt.Errorf("%s is invalid value for int", defaultValue)
+					return fmt.Errorf("%s is invalid value for %s", defaultValue, v.Field(i).Type().Kind())
 				}
 				v.Field(i).SetInt(value)
 				continue
@@ -73,7 +73,7 @@ func setDefaultValue(v reflect.Value) error {
 			if isUint(v.Field(i)) {
 				value, err := strconv.ParseUint(defaultValue, 10, 64)
 				if err != nil {
-					return fmt.Errorf("%s is invalid value for int", defaultValue)
+					return fmt.Errorf("%s is invalid value for %s", defaultValue, v.Field(i).Type().Kind())
 				}
 				v.Field(i).SetUint(value)
 				continue

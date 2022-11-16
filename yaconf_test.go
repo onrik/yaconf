@@ -45,7 +45,27 @@ func TestRead(t *testing.T) {
 	err = Read(file.Name(), &config2)
 	require.NotNil(t, err)
 
+	// Test invalid unmarshal
+	config3 := struct {
+		LogLevel int `yaml:"log_level"`
+	}{}
+	err = Read(file.Name(), &config3)
+	require.NotNil(t, err)
+
+	// Test invalid default valud
+	config4 := struct {
+		Pid int `yaml:"pid" yaconf:"default=yes"`
+	}{}
+	err = Read(file.Name(), &config4)
+	require.NotNil(t, err)
+	require.Equal(t, "yes is invalid value for int", err.Error())
+
 	// Test with custom validator
 	err = Read(file.Name(), &testConfig3{})
+	require.NotNil(t, err)
+	require.Equal(t, "invalid", err.Error())
+
+	// Test invalid file
+	err = Read("/tmp/yaconf/test.yml", &testConfig3{})
 	require.NotNil(t, err)
 }

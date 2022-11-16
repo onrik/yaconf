@@ -28,6 +28,46 @@ func TestFillDefaultValues(t *testing.T) {
 	require.Equal(t, 5432, config.DB.Port)
 	require.Equal(t, 2*time.Second, config.DB.Timeout)
 	require.Equal(t, true, config.DB.Debug)
+
+	// Test empty
+	config2 := &struct {
+		Count int `yaconf:"default"`
+	}{}
+	err = fillDefaultValues(&config2)
+	require.Nil(t, err)
+
+	// Test invalid int
+	config3 := &struct {
+		Count int `yaconf:"default=yes"`
+	}{}
+	err = fillDefaultValues(&config3)
+	require.NotNil(t, err)
+	require.Equal(t, "yes is invalid value for int", err.Error())
+
+	// Test invalid uint
+	config4 := &struct {
+		Count uint `yaconf:"default=a"`
+	}{}
+	err = fillDefaultValues(&config4)
+	require.NotNil(t, err)
+	require.Equal(t, "a is invalid value for uint", err.Error())
+
+	// Test invalid duration
+	config5 := &struct {
+		Timeout time.Duration `yaconf:"default=22"`
+	}{}
+	err = fillDefaultValues(&config5)
+	require.NotNil(t, err)
+	require.Equal(t, "22 is invalid value for time.Duration", err.Error())
+
+	// Test invalid bool
+	config6 := &struct {
+		Debug bool `yaconf:"default=22"`
+	}{}
+	err = fillDefaultValues(&config6)
+	require.NotNil(t, err)
+	require.Equal(t, "22 is invalid value for bool", err.Error())
+
 }
 
 func TestSetDefaultValue(t *testing.T) {
@@ -47,6 +87,15 @@ func TestSetDefaultValue(t *testing.T) {
 	require.Nil(t, err)
 	require.Empty(t, config.private)
 	require.Equal(t, "localhost", config.DB.Host)
+
+	// Test empty
+
+	// Test invalid bool
+	config2 := struct {
+		Debug bool `yaconf:"default=22"`
+	}{}
+	err = setDefaultValue(reflect.ValueOf(config2))
+	require.NotNil(t, err)
 }
 
 func TestIsDuration(t *testing.T) {
