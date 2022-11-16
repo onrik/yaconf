@@ -1,6 +1,7 @@
 package yaconf
 
 import (
+	"reflect"
 	"testing"
 	"time"
 
@@ -27,4 +28,49 @@ func TestFillDefaultValues(t *testing.T) {
 	require.Equal(t, 5432, config.DB.Port)
 	require.Equal(t, 2*time.Second, config.DB.Timeout)
 	require.Equal(t, true, config.DB.Debug)
+}
+
+func TestSetDefaultValue(t *testing.T) {
+	type db struct {
+		Host string `yaconf:"default=localhost"`
+	}
+	config := &struct {
+		LogLevel string `yaconf:"default=info"`
+		LogFile  string
+		private  string `yaconf:"default=test"`
+		DB       *db
+	}{
+		DB: &db{},
+	}
+
+	err := setDefaultValue(reflect.ValueOf(config))
+	require.Nil(t, err)
+	require.Empty(t, config.private)
+	require.Equal(t, "localhost", config.DB.Host)
+}
+
+func TestIsDuration(t *testing.T) {
+	require.True(t, isDuration(reflect.ValueOf(time.Duration(1000))))
+	require.False(t, isDuration(reflect.ValueOf(int64(22))))
+}
+
+func TestIsInt(t *testing.T) {
+	require.True(t, isInt(reflect.ValueOf(int8(1))))
+	require.True(t, isInt(reflect.ValueOf(int16(2))))
+	require.True(t, isInt(reflect.ValueOf(int32(3))))
+	require.True(t, isInt(reflect.ValueOf(int64(4))))
+	require.True(t, isInt(reflect.ValueOf(int8(5))))
+
+	require.False(t, isInt(reflect.ValueOf(byte('6'))))
+	require.False(t, isInt(reflect.ValueOf("22")))
+}
+
+func TestIsUint(t *testing.T) {
+	require.True(t, isUint(reflect.ValueOf(uint8(1))))
+	require.True(t, isUint(reflect.ValueOf(uint16(2))))
+	require.True(t, isUint(reflect.ValueOf(uint32(3))))
+	require.True(t, isUint(reflect.ValueOf(uint64(4))))
+	require.True(t, isUint(reflect.ValueOf(uint8(5))))
+
+	require.False(t, isUint(reflect.ValueOf("22")))
 }
