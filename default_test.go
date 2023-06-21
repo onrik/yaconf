@@ -10,8 +10,10 @@ import (
 
 func TestFillDefaultValues(t *testing.T) {
 	config := &struct {
-		PID      uint   `yaconf:"default=90"`
-		LogLevel string `yaconf:"default=debug"`
+		PID      uint    `yaconf:"default=90"`
+		LogLevel string  `yaconf:"default=debug"`
+		Str      string  `yaconf:"default=111"`
+		StrPtr   *string `yaconf:"default=222"`
 		DB       struct {
 			Host    string        `yaconf:"default=localhost"`
 			Port    int           `yaconf:"default=5432"`
@@ -28,6 +30,9 @@ func TestFillDefaultValues(t *testing.T) {
 	require.Equal(t, 5432, config.DB.Port)
 	require.Equal(t, 2*time.Second, config.DB.Timeout)
 	require.Equal(t, true, config.DB.Debug)
+	require.NotNil(t, config.StrPtr)
+	require.Equal(t, "222", *config.StrPtr)
+	require.Equal(t, "111", config.Str)
 
 	// Test empty
 	config2 := &struct {

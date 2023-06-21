@@ -15,12 +15,12 @@ func Read(filename string, config interface{}) error {
 		return err
 	}
 
-	err = yaml.Unmarshal(data, config)
+	err = fillDefaultValues(config)
 	if err != nil {
 		return err
 	}
 
-	err = fillDefaultValues(config)
+	err = yaml.Unmarshal(data, config)
 	if err != nil {
 		return err
 	}

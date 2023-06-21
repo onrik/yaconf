@@ -42,10 +42,18 @@ func setDefaultValue(v reflect.Value) error {
 			}
 			defaultValue := parts[1]
 
+			if f.Type.Kind() == reflect.Ptr {
+				if f.Type.Elem().Kind() == reflect.String {
+					v.Field(i).Set(reflect.ValueOf(&defaultValue))
+					continue
+				}
+			}
+
 			if f.Type.Kind() == reflect.String {
 				v.Field(i).Set(reflect.ValueOf(defaultValue))
 				continue
 			}
+
 			if f.Type.Kind() == reflect.Bool {
 				value, err := strconv.ParseBool(defaultValue)
 				if err != nil {
