@@ -25,13 +25,22 @@ func Read(filename string, config interface{}) error {
 		return err
 	}
 
-	errors := validate(config, "")
-	if len(errors) > 0 {
-		return fmt.Errorf(strings.Join(errors, ", "))
+	err = Validate(config)
+	if err != nil {
+		return err
 	}
 
 	if v, ok := config.(validator); ok {
 		return v.Validate()
+	}
+
+	return nil
+}
+
+func Validate(config interface{}) error {
+	errors := validate(config, "")
+	if len(errors) > 0 {
+		return fmt.Errorf(strings.Join(errors, ", "))
 	}
 
 	return nil
