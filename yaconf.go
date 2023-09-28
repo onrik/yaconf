@@ -15,7 +15,7 @@ func Read(filename string, config interface{}) error {
 		return err
 	}
 
-	err = fillDefaultValues(config)
+	err = FillDefaultValues(config)
 	if err != nil {
 		return err
 	}

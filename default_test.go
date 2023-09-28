@@ -22,7 +22,7 @@ func TestFillDefaultValues(t *testing.T) {
 		}
 	}{}
 
-	err := fillDefaultValues(config)
+	err := FillDefaultValues(config)
 	require.Nil(t, err)
 	require.Equal(t, uint(90), config.PID)
 	require.Equal(t, "debug", config.LogLevel)
@@ -38,14 +38,14 @@ func TestFillDefaultValues(t *testing.T) {
 	config2 := &struct {
 		Count int `yaconf:"default"`
 	}{}
-	err = fillDefaultValues(&config2)
+	err = FillDefaultValues(&config2)
 	require.Nil(t, err)
 
 	// Test invalid int
 	config3 := &struct {
 		Count int `yaconf:"default=yes"`
 	}{}
-	err = fillDefaultValues(&config3)
+	err = FillDefaultValues(&config3)
 	require.NotNil(t, err)
 	require.Equal(t, "yes is invalid value for int", err.Error())
 
@@ -53,7 +53,7 @@ func TestFillDefaultValues(t *testing.T) {
 	config4 := &struct {
 		Count uint `yaconf:"default=a"`
 	}{}
-	err = fillDefaultValues(&config4)
+	err = FillDefaultValues(&config4)
 	require.NotNil(t, err)
 	require.Equal(t, "a is invalid value for uint", err.Error())
 
@@ -61,7 +61,7 @@ func TestFillDefaultValues(t *testing.T) {
 	config5 := &struct {
 		Timeout time.Duration `yaconf:"default=22"`
 	}{}
-	err = fillDefaultValues(&config5)
+	err = FillDefaultValues(&config5)
 	require.NotNil(t, err)
 	require.Equal(t, "22 is invalid value for time.Duration", err.Error())
 
@@ -69,7 +69,7 @@ func TestFillDefaultValues(t *testing.T) {
 	config6 := &struct {
 		Debug bool `yaconf:"default=22"`
 	}{}
-	err = fillDefaultValues(&config6)
+	err = FillDefaultValues(&config6)
 	require.NotNil(t, err)
 	require.Equal(t, "22 is invalid value for bool", err.Error())
 

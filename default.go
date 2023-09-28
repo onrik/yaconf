@@ -116,7 +116,7 @@ func isUint(v reflect.Value) bool {
 	return false
 }
 
-func fillDefaultValues(config interface{}) error {
+func FillDefaultValues(config interface{}) error {
 	v := reflect.ValueOf(config)
 	if v.Type().Kind() == reflect.Ptr {
 		v = v.Elem()
