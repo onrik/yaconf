@@ -9,7 +9,7 @@ import (
 )
 
 func setDefaultValue(v reflect.Value) error {
-	if v.Type().Kind() == reflect.Ptr {
+	if v.Type().Kind() == reflect.Pointer {
 		v = v.Elem()
 	}
 
@@ -24,7 +24,7 @@ func setDefaultValue(v reflect.Value) error {
 			continue
 		}
 
-		if f.Type.Kind() == reflect.Ptr && f.Type.Elem().Kind() == reflect.Struct {
+		if f.Type.Kind() == reflect.Pointer && f.Type.Elem().Kind() == reflect.Struct {
 			if !v.Field(i).IsNil() {
 				setDefaultValue(v.Field(i))
 			}
@@ -42,7 +42,7 @@ func setDefaultValue(v reflect.Value) error {
 			}
 			defaultValue := parts[1]
 
-			if f.Type.Kind() == reflect.Ptr {
+			if f.Type.Kind() == reflect.Pointer {
 				if f.Type.Elem().Kind() == reflect.String {
 					v.Field(i).Set(reflect.ValueOf(&defaultValue))
 					continue
@@ -57,7 +57,7 @@ func setDefaultValue(v reflect.Value) error {
 			if f.Type.Kind() == reflect.Bool {
 				value, err := strconv.ParseBool(defaultValue)
 				if err != nil {
-					return fmt.Errorf("%s is invalid value for bool", defaultValue)
+					return fmt.Errorf("%s: %s is invalid value for bool", f.Name, defaultValue)
 				}
 				v.Field(i).SetBool(value)
 				continue
@@ -65,7 +65,7 @@ func setDefaultValue(v reflect.Value) error {
 			if isDuration(v.Field(i)) {
 				value, err := time.ParseDuration(defaultValue)
 				if err != nil {
-					return fmt.Errorf("%s is invalid value for time.Duration", defaultValue)
+					return fmt.Errorf("%s: %s is invalid value for time.Duration", f.Name, defaultValue)
 				}
 				v.Field(i).Set(reflect.ValueOf(value))
 				continue
@@ -73,7 +73,7 @@ func setDefaultValue(v reflect.Value) error {
 			if isInt(v.Field(i)) {
 				value, err := strconv.ParseInt(defaultValue, 10, 64)
 				if err != nil {
-					return fmt.Errorf("%s is invalid value for %s", defaultValue, v.Field(i).Type().Kind())
+					return fmt.Errorf("%s: %s is invalid value for %s", f.Name, defaultValue, v.Field(i).Type().Kind())
 				}
 				v.Field(i).SetInt(value)
 				continue
@@ -81,7 +81,7 @@ func setDefaultValue(v reflect.Value) error {
 			if isUint(v.Field(i)) {
 				value, err := strconv.ParseUint(defaultValue, 10, 64)
 				if err != nil {
-					return fmt.Errorf("%s is invalid value for %s", defaultValue, v.Field(i).Type().Kind())
+					return fmt.Errorf("%s: %s is invalid value for %s", f.Name, defaultValue, v.Field(i).Type().Kind())
 				}
 				v.Field(i).SetUint(value)
 				continue
@@ -116,9 +116,9 @@ func isUint(v reflect.Value) bool {
 	return false
 }
 
-func FillDefaultValues(config interface{}) error {
+func FillDefaultValues(config any) error {
 	v := reflect.ValueOf(config)
-	if v.Type().Kind() == reflect.Ptr {
+	if v.Type().Kind() == reflect.Pointer {
 		v = v.Elem()
 	}
 

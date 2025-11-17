@@ -58,7 +58,7 @@ func TestRead(t *testing.T) {
 	}{}
 	err = Read(file.Name(), &config4)
 	require.NotNil(t, err)
-	require.Equal(t, "yes is invalid value for int", err.Error())
+	require.Equal(t, "Pid: yes is invalid value for int", err.Error())
 
 	// Test with custom validator
 	err = Read(file.Name(), &testConfig3{})

@@ -1,7 +1,7 @@
 package yaconf
 
 import (
-	"fmt"
+	"errors"
 	"os"
 	"strings"
 
@@ -9,7 +9,7 @@ import (
 )
 
 // Read config from file
-func Read(filename string, config interface{}) error {
+func Read(filename string, config any) error {
 	data, err := os.ReadFile(filename)
 	if err != nil {
 		return err
@@ -37,10 +37,10 @@ func Read(filename string, config interface{}) error {
 	return nil
 }
 
-func Validate(config interface{}) error {
-	errors := validate(config, "")
-	if len(errors) > 0 {
-		return fmt.Errorf(strings.Join(errors, ", "))
+func Validate(config any) error {
+	errs := validate(config, "")
+	if len(errs) > 0 {
+		return errors.New(strings.Join(errs, ", "))
 	}
 
 	return nil

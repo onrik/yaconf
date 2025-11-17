@@ -47,7 +47,7 @@ func TestFillDefaultValues(t *testing.T) {
 	}{}
 	err = FillDefaultValues(&config3)
 	require.NotNil(t, err)
-	require.Equal(t, "yes is invalid value for int", err.Error())
+	require.Equal(t, "Count: yes is invalid value for int", err.Error())
 
 	// Test invalid uint
 	config4 := &struct {
@@ -55,7 +55,7 @@ func TestFillDefaultValues(t *testing.T) {
 	}{}
 	err = FillDefaultValues(&config4)
 	require.NotNil(t, err)
-	require.Equal(t, "a is invalid value for uint", err.Error())
+	require.Equal(t, "Count: a is invalid value for uint", err.Error())
 
 	// Test invalid duration
 	config5 := &struct {
@@ -63,7 +63,7 @@ func TestFillDefaultValues(t *testing.T) {
 	}{}
 	err = FillDefaultValues(&config5)
 	require.NotNil(t, err)
-	require.Equal(t, "22 is invalid value for time.Duration", err.Error())
+	require.Equal(t, "Timeout: 22 is invalid value for time.Duration", err.Error())
 
 	// Test invalid bool
 	config6 := &struct {
@@ -71,7 +71,7 @@ func TestFillDefaultValues(t *testing.T) {
 	}{}
 	err = FillDefaultValues(&config6)
 	require.NotNil(t, err)
-	require.Equal(t, "22 is invalid value for bool", err.Error())
+	require.Equal(t, "Debug: 22 is invalid value for bool", err.Error())
 
 }
 

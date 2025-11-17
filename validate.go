@@ -18,10 +18,10 @@ func addPrefix(prefix, name string) string {
 	return fmt.Sprintf("%s.%s", prefix, name)
 }
 
-func validate(config interface{}, prefix string) []string {
+func validate(config any, prefix string) []string {
 	t := reflect.TypeOf(config)
 	v := reflect.ValueOf(config)
-	if t.Kind() == reflect.Ptr {
+	if t.Kind() == reflect.Pointer {
 		t = t.Elem()
 		v = v.Elem()
 	}
@@ -48,7 +48,7 @@ func validate(config interface{}, prefix string) []string {
 			continue
 		}
 
-		if f.Type.Kind() == reflect.Ptr {
+		if f.Type.Kind() == reflect.Pointer {
 			if f.Type.Elem().Kind() != reflect.Struct {
 				continue
 			}
